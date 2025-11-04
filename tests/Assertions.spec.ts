@@ -42,7 +42,7 @@ test('to have attribute' , async({page}) => {
 
     await page.goto('https://the-internet.herokuapp.com/dynamic_controls');
    
-    await expect(page.locator('//*[@id="input-example"]/button')).toHaveAttribute('autocomplete','button');
+    await expect(page.locator('//*[@id="input-example"]/button')).toHaveAttribute('autocomplete','off');
     
     await page.close();
     
