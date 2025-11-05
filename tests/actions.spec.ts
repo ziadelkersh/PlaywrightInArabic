@@ -188,7 +188,7 @@ test('click', async({page})=> {
       page.context().waitForEvent('page'),await page.locator('[onclick="newwindow()"]').click()
     ])
     await newTab.waitForLoadState();
-    await newTab.locator('href="/downloads"').click();
+    await newTab.locator('[href="/downloads"]').click();
     await expect(newTab.locator('[class="d-1"]')).toContainText('Downloads');
     await page.locator('[href="Index.html"]').click();
     await expect (page.locator('[id="btn1"]')).toHaveText('Sign In');
