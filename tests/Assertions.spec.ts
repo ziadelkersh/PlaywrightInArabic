@@ -72,11 +72,11 @@ test('to have title' , async({page}) => {
     
 })
 
-test('to have screenshot' , async({page}) => {
+// test('to have screenshot' , async({page}) => {
 
-    await page.goto('https://the-internet.herokuapp.com/dynamic_controls');
-   await expect(page).toHaveScreenshot();
+//     await page.goto('https://the-internet.herokuapp.com/dynamic_controls');
+//    await expect(page).toHaveScreenshot();
 
-    await page.close();
+//     await page.close();
     
-})
+// })

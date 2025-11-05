@@ -163,3 +163,83 @@ test('click', async({page})=> {
    
     await page.close();
   })
+
+  test('tabs', async({page})=> {
+    await page.goto('https://the-internet.herokuapp.com/windows');
+    const [browzerTabs] = await Promise.all([
+      page.waitForEvent('popup'),await page.locator('[href="/windows/new"]').click()
+    ])
+    await browzerTabs.waitForLoadState();
+    const pages = browzerTabs.context().pages();
+    const defaultTab = pages[0];
+    await expect(defaultTab.locator('//h3')).toContainText('Opening a new window');
+    const latestTab = pages[pages.length-1]
+    await expect(latestTab.locator('//h3')).toContainText('New Window');
+    defaultTab.close();
+    latestTab.close();
+   
+    await page.close();
+  })
+
+  test('windows', async({page})=> {
+    await page.goto('https://demo.automationtesting.in/Windows.html');
+    await page.locator('[href="#Seperate"]').click();
+    const [newTab] = await Promise.all([
+      page.context().waitForEvent('page'),await page.locator('[onclick="newwindow()"]').click()
+    ])
+    await newTab.waitForLoadState();
+    await newTab.locator('href="/downloads"').click();
+    await expect(newTab.locator('[class="d-1"]')).toContainText('Downloads');
+    await page.locator('[href="Index.html"]').click();
+    await expect (page.locator('[id="btn1"]')).toHaveText('Sign In');
+    
+   
+    await page.close();
+    await newTab.close();
+  })
+
+  test('dragAndDrop', async({page})=> {
+    await page.goto('https://the-internet.herokuapp.com/drag_and_drop');
+   const boxA = page.locator('[id="column-a"]');
+   const boxB = page.locator('[id="column-b"]');
+
+   await boxA.hover();
+   await page.mouse.down();
+   await boxB.hover();
+   await page.mouse.up();
+
+   await page.waitForTimeout(2000);
+   await boxB.dragTo(boxA);
+   await page.waitForTimeout(2000);
+
+    await page.close();
+  })
+  
+
+  test('download', async({page})=> {
+    await page.goto('https://the-internet.herokuapp.com/download');
+   const download = await Promise.all([
+    page.waitForEvent('download'), await page.locator('[href="download/random_data.txt"]').click()
+
+   ])
+   const downloadfile = download[0];
+   const downloadfilepath = await downloadfile.path();
+   const downloadfilename = downloadfile.suggestedFilename();
+   await downloadfile.saveAs(downloadfilename)
+   // saveas("Ziad")
+   console.log('the downloaded path is ' + downloadfilepath);
+    await page.close();
+  })
+  
+  test('upload', async({page})=> {
+    await page.goto('https://the-internet.herokuapp.com/upload');
+   const uploadfile = await Promise.all([
+    page.waitForEvent('filechooser'), await page.locator('[id="file-upload"]').click()
+
+   ])
+   await uploadfile[0].setFiles('./random_data.txt');
+   await page.locator('[id="file-submit"]').click();
+   await page.waitForTimeout(2000);
+   
+    await page.close();
+  })
